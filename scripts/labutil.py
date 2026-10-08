@@ -27,14 +27,32 @@ def sql_text(nombre: str, **extra) -> str:
     return texto
 
 
+def _globs(tipo: str, anio) -> str:
+    """Lista de globs SQL para un tipo de taxi. `anio`: "*", "2026" o lista de patrones."""
+    if isinstance(anio, (list, tuple)):
+        patrones = [f"{RAW}/{tipo}/{a}/*.parquet" for a in anio]
+    else:
+        patrones = [f"{RAW}/{tipo}/{anio}/*.parquet"]
+    return "[" + ", ".join(f"'{p}'" for p in patrones) + "]"
+
+
 def connect(database: str = ":memory:", read_only: bool = False, views: bool = True,
-            anio: str = "*"):
-    """`anio` limita las vistas y consultas a un anio ("2026"); "*" lee todos."""
+            anio="*", yellow=None, green=None):
+    """Abre DuckDB con las vistas sobre los Parquet.
+
+    `anio` limita a un anio ("2026"), una lista de anios o "*" (todos). Para
+    control fino, `yellow`/`green` aceptan listas de globs completos.
+    """
     global ANIO
-    ANIO = str(anio)
+    ANIO = str(anio) if not isinstance(anio, (list, tuple)) else "*"
     con = duckdb.connect(database, read_only=read_only)
     if views:
-        con.execute(sql_text("00_views.sql"))
+        lit = lambda l: "[" + ", ".join(f"'{p}'" for p in l) + "]"
+        con.execute(sql_text(
+            "00_views.sql",
+            YELLOW_FILES=lit(yellow) if yellow else _globs("yellow", anio),
+            GREEN_FILES=lit(green) if green else _globs("green", anio),
+        ))
     return con
 
 

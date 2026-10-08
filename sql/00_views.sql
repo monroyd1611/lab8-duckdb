@@ -1,12 +1,16 @@
 -- Vistas base sobre los archivos Parquet (no copian datos).
--- Los globs incluyen todos los anios descargados: al bajar un anio nuevo
+-- {YELLOW_FILES}/{GREEN_FILES} son listas de globs (por defecto todos los anios descargados): al bajar un anio nuevo
 -- aparece automaticamente, sin modificar ninguna consulta.
 
 CREATE OR REPLACE VIEW yellow_raw AS
-SELECT * FROM read_parquet('{RAW}/yellow/{ANIO}/*.parquet', union_by_name = true, filename = true);
+SELECT * FROM read_parquet({YELLOW_FILES}, union_by_name = true, filename = true)
+UNION ALL BY NAME  -- esquema "ancla": asegura que existan columnas que no estan en todos los anios
+SELECT NULL::DOUBLE AS cbd_congestion_fee, NULL::DOUBLE AS Airport_fee WHERE false;
 
 CREATE OR REPLACE VIEW green_raw AS
-SELECT * FROM read_parquet('{RAW}/green/{ANIO}/*.parquet', union_by_name = true, filename = true);
+SELECT * FROM read_parquet({GREEN_FILES}, union_by_name = true, filename = true)
+UNION ALL BY NAME
+SELECT NULL::DOUBLE AS cbd_congestion_fee WHERE false;
 
 -- Esquema comun de yellow + green. data_year/data_month vienen del nombre del
 -- archivo (mes de publicacion), no del timestamp, que puede estar corrupto.
