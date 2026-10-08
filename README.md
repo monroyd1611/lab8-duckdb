@@ -150,7 +150,7 @@ las herramientas del ambiente y por que importa la reproducibilidad.
 ## Como descargar los datos
 
 ```bash
-python scripts/download_data.py                       # 2026 (por defecto), yellow y green
+python scripts/download_data.py                       # 2024, 2025 y 2026 (por defecto), yellow y green
 python scripts/download_data.py --anios 2024 2025 2026
 python scripts/download_data.py --taxi green --anios 2025
 python scripts/verify_data.py --anios 2024 2025 2026  # comprueba que esta completo

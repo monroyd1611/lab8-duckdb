@@ -35,3 +35,29 @@ Segunda corrida: 0 descargados, 16 existentes.
 - verifica que no queden `.part` sin terminar.
 
 Resultado 2026: yellow 8/8 meses (29,703,355 filas) y green 8/8 (337,114 filas).
+
+## Ampliacion a 2024 y 2025 (Ejercicios 5 y 8)
+
+`ANIOS` paso de `(2026,)` a `(2026, 2024)` y luego a `(2026, 2025, 2024)`;
+tambien se puede indicar `--anios` por linea de comandos. No se modifico nada mas
+del flujo: los archivos se separan por `data/raw/<tipo>/<anio>/`, de modo que los
+anios nuevos no tocan los ya descargados (5.2, 8.2) y el criterio "existe y pesa
+> 0 bytes" evita volver a descargarlos (5.3).
+
+Hallazgo durante la ampliacion: en la primera corrida de 2024, `yellow 2024-03`
+quedo marcado como "no publicado" por un fallo transitorio del `HEAD`. Se corrigio
+`esta_publicado()`: ahora reintenta y solo considera "no publicado" una respuesta
+403/404. `verify_data.py` detecta este tipo de hueco (compara con el servidor).
+
+Resultado final (`python scripts/verify_data.py --anios 2024 2025 2026`):
+
+| tipo | anio | meses | filas |
+|------|------|-------|-------|
+| yellow | 2024 | 12/12 | 41,169,720 |
+| green  | 2024 | 12/12 | 660,218 |
+| yellow | 2025 | 12/12 | 48,722,602 |
+| green  | 2025 | 12/12 | 591,375 |
+| yellow | 2026 | 8/8 (sep-dic aun no publicados) | 29,703,355 |
+| green  | 2026 | 8/8 | 337,114 |
+
+Segunda ejecucion tras agregar 2025: 0 descargados, 64 existentes.
