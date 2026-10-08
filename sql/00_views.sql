@@ -3,10 +3,10 @@
 -- aparece automaticamente, sin modificar ninguna consulta.
 
 CREATE OR REPLACE VIEW yellow_raw AS
-SELECT * FROM read_parquet('{RAW}/yellow/*/*.parquet', union_by_name = true, filename = true);
+SELECT * FROM read_parquet('{RAW}/yellow/{ANIO}/*.parquet', union_by_name = true, filename = true);
 
 CREATE OR REPLACE VIEW green_raw AS
-SELECT * FROM read_parquet('{RAW}/green/*/*.parquet', union_by_name = true, filename = true);
+SELECT * FROM read_parquet('{RAW}/green/{ANIO}/*.parquet', union_by_name = true, filename = true);
 
 -- Esquema comun de yellow + green. data_year/data_month vienen del nombre del
 -- archivo (mes de publicacion), no del timestamp, que puede estar corrupto.

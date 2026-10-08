@@ -15,16 +15,23 @@ RAW = ROOT / "data" / "raw"
 PROCESSED = ROOT / "data" / "processed"
 SQL_DIR = ROOT / "sql"
 
+# Carpeta de anio a leer: "*" = todos los anios descargados; "2026" = solo ese anio.
+ANIO = "*"
+
 
 def sql_text(nombre: str, **extra) -> str:
     texto = (SQL_DIR / nombre).read_text() if nombre.endswith(".sql") else nombre
-    valores = {"RAW": str(RAW), **extra}
+    valores = {"RAW": str(RAW), "ANIO": ANIO, **extra}
     for clave, valor in valores.items():
         texto = texto.replace("{" + clave + "}", str(valor))
     return texto
 
 
-def connect(database: str = ":memory:", read_only: bool = False, views: bool = True):
+def connect(database: str = ":memory:", read_only: bool = False, views: bool = True,
+            anio: str = "*"):
+    """`anio` limita las vistas y consultas a un anio ("2026"); "*" lee todos."""
+    global ANIO
+    ANIO = str(anio)
     con = duckdb.connect(database, read_only=read_only)
     if views:
         con.execute(sql_text("00_views.sql"))
