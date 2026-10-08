@@ -1,5 +1,5 @@
--- Objetivo: contar anomalias de calidad en yellow (3.6).
--- Fuente: yellow_tripdata_*.parquet (via vista trips).
+-- Objetivo: contar anomalias de calidad en yellow y green (3.6).
+-- Fuente: yellow_tripdata_*.parquet y green_tripdata_*.parquet (via vista trips).
 SELECT taxi,
   count(*)                                                AS total,
   count(*) FILTER (WHERE passenger_count IS NULL)         AS pasajeros_nulos,
