@@ -192,3 +192,15 @@ python scripts/dashboard.py   # tablero matplotlib -> docs/dashboard.png
 ```
 
 El tablero (10 indicadores + 4 KPIs) esta versionado en `docs/dashboard.png`.
+
+Tablero en Metabase (mismos indicadores, consultando los Parquet desde Metabase):
+
+```bash
+docker compose exec -e MB_EMAIL=<correo> -e MB_PASSWORD=<clave> lab python scripts/metabase_dashboard.py
+```
+
+Abre el enlace que imprime (`http://localhost:3000/dashboard/<id>`). Si Metabase aun
+no esta configurado, el script crea el administrador con esas credenciales.
+Detalles y evidencia: [docs/metabase.md](docs/metabase.md).
+
+Discusion final (Ejercicio 9): [docs/09_discusion.md](docs/09_discusion.md).
