@@ -162,12 +162,32 @@ script y criterio de completitud: [docs/02_descarga.md](docs/02_descarga.md).
 
 ## Como ejecutar el analisis
 
-<!-- TODO -->
+Los notebooks (en `notebooks/`, abrir en JupyterLab) estan en orden y ya contienen sus salidas; para regenerarlos use *Run All*.
+Todas las consultas estan en `sql/` (`00_views.sql` define `trips` y `trips_clean`); `scripts/labutil.py` las ejecuta.
+
+| Notebook | Ejercicio |
+|----------|-----------|
+| `03_consultas_parquet.ipynb` | 3 - consultas directas, calidad de datos (alcance 2026) |
+| `04_analisis_exploratorio.ipynb` | 4 - EDA (alcance 2026) |
+| `05_incorporacion_2024.ipynb` | 5 - incorporacion de 2024 |
+| `06_benchmark.ipynb` | 6 - Parquet vs tabla DuckDB |
+| `07_indicadores_tablero.ipynb` | 7 - indicadores y tablero |
+| `08_analisis_completo.ipynb` | 8 - tres anios y patrones |
+
+Documentos: `docs/01_ambiente.md`, `docs/02_descarga.md`, `docs/09_discusion.md`.
 
 ## Como reproducir los benchmarks
 
-<!-- TODO (Ejercicio 6) -->
+```bash
+python scripts/benchmark.py --repeticiones 5   # escribe docs/benchmark_results.csv y data/processed/lab8.duckdb
+```
+
+Requiere los tres anios descargados (~10 min y ~6 GiB de disco para la base). Analisis en `notebooks/06_benchmark.ipynb`.
 
 ## Como generar los resultados principales
 
-<!-- TODO -->
+```bash
+python scripts/dashboard.py   # tablero matplotlib -> docs/dashboard.png
+```
+
+El tablero (10 indicadores + 4 KPIs) esta versionado en `docs/dashboard.png`.
