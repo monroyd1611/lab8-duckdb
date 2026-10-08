@@ -125,6 +125,7 @@ Con Docker (recomendado):
 git clone https://github.com/<su-usuario>/duckdb.git && cd duckdb
 docker compose up --build -d
 docker compose ps            # lab y metabase deben estar "running"
+docker compose exec lab python scripts/verify_data.py   # prueba rapida dentro del contenedor
 ```
 
 | Servicio | URL | Para que sirve |
@@ -134,7 +135,7 @@ docker compose ps            # lab y metabase deben estar "running"
 
 Para detenerlo: `docker compose down`.
 
-Alternativa sin Docker (usada para desarrollar en una Mac sin Docker):
+Alternativa sin Docker (entorno virtual local):
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
