@@ -119,11 +119,46 @@ generar los resultados principales.
 
 ## Como levantar el ambiente
 
-<!-- TODO (Ejercicio 1.5) -->
+Con Docker (recomendado):
+
+```bash
+git clone https://github.com/<su-usuario>/duckdb.git && cd duckdb
+docker compose up --build -d
+docker compose ps            # lab y metabase deben estar "running"
+```
+
+| Servicio | URL | Para que sirve |
+|----------|-----|----------------|
+| `lab` | <http://localhost:8888> | JupyterLab (sin token) con Python, DuckDB, pandas, matplotlib |
+| `metabase` | <http://localhost:3000> | Metabase con el driver de DuckDB |
+
+Para detenerlo: `docker compose down`.
+
+Alternativa sin Docker (usada para desarrollar en una Mac sin Docker):
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install duckdb pandas pyarrow matplotlib requests jupyterlab
+jupyter lab
+```
+
+En este caso las rutas son relativas a la raiz del repositorio (`data/raw/...`);
+los notebooks detectan ambos casos automaticamente. Ver
+[docs/01_ambiente.md](docs/01_ambiente.md) para el proposito de cada directorio,
+las herramientas del ambiente y por que importa la reproducibilidad.
 
 ## Como descargar los datos
 
-<!-- TODO (Ejercicios 2.6, 5.1 y 8.1) -->
+```bash
+python scripts/download_data.py                       # 2026 (por defecto), yellow y green
+python scripts/download_data.py --anios 2024 2025 2026
+python scripts/download_data.py --taxi green --anios 2025
+python scripts/verify_data.py --anios 2024 2025 2026  # comprueba que esta completo
+```
+
+Dentro de Docker: `docker compose exec lab python scripts/download_data.py --anios 2024 2025 2026`.
+El script es idempotente: no vuelve a descargar archivos existentes. Cambios al
+script y criterio de completitud: [docs/02_descarga.md](docs/02_descarga.md).
 
 ## Como ejecutar el analisis
 
