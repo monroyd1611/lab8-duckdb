@@ -32,7 +32,7 @@ from pathlib import Path
 
 import requests
 
-ANIOS = (2026, 2024)
+ANIOS = (2026, 2025, 2024)
 TIPOS_TAXI = ("yellow", "green")
 URL_BASE = "https://d37ci6vzurychx.cloudfront.net/trip-data"
 DIR_DESTINO = Path("data/raw")
