@@ -59,12 +59,21 @@ def ruta_destino(tipo: str, anio: int, mes: int) -> Path:
 
 
 def esta_publicado(url: str) -> bool:
-    """Indica si el archivo existe en el servidor (sin descargarlo)."""
-    try:
-        respuesta = requests.head(url, timeout=TIEMPO_ESPERA, allow_redirects=True)
-    except requests.RequestException:
-        return False
-    return respuesta.ok
+    """Indica si el archivo existe en el servidor (sin descargarlo).
+
+    Solo 403/404 significan "no publicado". Errores de red o 5xx se reintentan,
+    para no confundir un fallo transitorio con un mes inexistente.
+    """
+    for _ in range(INTENTOS):
+        try:
+            respuesta = requests.head(url, timeout=TIEMPO_ESPERA, allow_redirects=True)
+        except requests.RequestException:
+            continue
+        if respuesta.ok:
+            return True
+        if respuesta.status_code in (403, 404):
+            return False
+    return False
 
 
 def formato_tamanio(n: float) -> str:
